@@ -1,17 +1,13 @@
 {
-  "name": "Nexus",
+  "name": "Nexus Invest",
   "short_name": "Nexus",
-  "start_url": "./index.html",
-  "scope": "./",
+  "description": "Plateforme d'investissement et de formations",
+  "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#000000",
+  "theme_color": "#B76EFF",
+  "background_color": "#030305",
+  "orientation": "portrait",
   "icons": [
-    {
-      "src": "icon.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
+    { "src": "icons.png", "sizes": "512x512", "type": "image/png" }
   ]
 }
-
