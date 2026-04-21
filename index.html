@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Nexus - Invest & Learn</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="icon.png">
+  
+  <style>
+    /* ===== VARIABLES - NEXUS EDITION ===== */
+    :root {
+      --primary: #B76EFF;
+      --primary-dark: #8B3FE8;
+      --primary-light: #D4A1FF;
+      --primary-glow: rgba(183, 110, 255, 0.35);
+      --bg-dark: #030305;
+      --bg-medium: #08080F;
+      --bg-light: #0F0F1A;
+      --text-light: #FFFFFF;
+      --text-dim: #8B90A8;
+      --card-bg: rgba(15, 15, 26, 0.85);
+      --card-border: rgba(183, 110, 255, 0.08);
+      --card-border-hover: rgba(183, 110, 255, 0.25);
+      --success: #2EE89A;
+      --warning: #FFD166;
+      --danger: #FF4D6D;
+      --shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.9);
+      --shadow-glow: 0 0 40px rgba(183, 110, 255, 0.2);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --glass-bg: rgba(183, 110, 255, 0.04);
+      --glass-border: rgba(183, 110, 255, 0.07);
+      --grain-opacity: 0.035;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-light);
+      -webkit-font-smoothing: antialiased;
+      position: relative;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* ===== GRAIN TEXTURE OVERLAY ===== */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: var(--grain-opacity);
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 128px 128px;
+    }
+
+    /* ===== BACKGROUND ===== */
+    .gradient-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -2;
+      background:
+        radial-gradient(ellipse 60% 50% at 15% 20%, rgba(139, 63, 232, 0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 85% 75%, rgba(183, 110, 255, 0.12) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 60% at 50% 50%, rgba(8, 8, 20, 0.6) 0%, transparent 80%),
+        linear-gradient(180deg, #030305 0%, #05051A 50%, #030305 100%);
+    }
+
+    /* Animated glow orbs */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      z-index: -1;
+      pointer-events: none;
+      animation: orbFloat 8s ease-in-out infinite;
+    }
+
+    .orb-1 {
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(139, 63, 232, 0.15), transparent 70%);
+      top: -100px; left: -100px;
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      width: 250px; height: 250px;
+      background: radial-gradient(circle, rgba(183, 110, 255, 0.1), transparent 70%);
+      bottom: 20%; right: -80px;
+      animation-delay: -4s;
+    }
+
+    @keyframes orbFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(20px, -20px) scale(1.05); }
+      66% { transform: translate(-15px, 15px) scale(0.95); }
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 5%;
+      background: rgba(3, 3, 5, 0.92);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(183, 110, 255, 0.07);
+      box-shadow: 0 1px 30px rgba(0,0,0,0.5);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    /* Logo icon: lettre N transparente sans contour, juste le texte brillant */
+    .logo-icon {
+      width: 38px;
+      height: 38px;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-weight: 900;
+      /* Transparent fill-through text effect */
+      color: transparent;
+      -webkit-text-stroke: 0px transparent;
+      background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 50%, var(--primary-dark) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -1px;
+      animation: nexusGlow 3s ease-in-out infinite;
+      line-height: 1;
+    }
+
+    @keyframes nexusGlow {
+      0%, 100% {
+        filter: brightness(1) drop-shadow(0 0 0px rgba(183, 110, 255, 0));
+      }
+      50% {
+        filter: brightness(1.3) drop-shadow(0 0 10px rgba(183, 110, 255, 0.6));
+      }
+    }
+
+    .logo-text {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: var(--text-light);
+      text-transform: uppercase;
+      font-style: italic;
+    }
+
+    .logo-text span {
+      color: var(--primary);
+    }
+
+    .menu-btn {
+      width: 40px;
+      height: 40px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-light);
+      font-size: 17px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .menu-btn:active {
+      background: rgba(183, 110, 255, 0.12);
+      border-color: var(--primary);
+      transform: scale(0.95);
+    }
+
+    /* ===== USER PROFILE ===== */
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 4px 12px 4px 4px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 40px;
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .user-profile:active {
+      border-color: var(--primary);
+      background: rgba(183, 110, 255, 0.08);
+    }
+
+    /* Avatar user: première lettre transparente sans contour */
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      background: transparent;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+      /* Même effet que le logo: lettre transparente/gradient */
+      color: transparent;
+      background: linear-gradient(135deg, var(--primary-light), var(--primary-dark));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      /* Cercle visible: juste un ring fin */
+      outline: 1.5px solid rgba(183, 110, 255, 0.4);
+      outline-offset: 0px;
+      position: relative;
+    }
+
+    .user-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-light);
+      display: inline;
+    }
+
+    /* ===== CONTENEUR ===== */
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+
+    /* ===== HERO ===== */
+    .hero-section {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      margin-bottom: 44px;
+    }
+
+    .hero-content {
+      animation: slideInUp 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes slideInUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(90deg, rgba(183, 110, 255, 0.12), rgba(139, 63, 232, 0.08));
+      border: 1px solid rgba(183, 110, 255, 0.25);
+      border-radius: 50px;
+      padding: 7px 14px;
+      margin-bottom: 22px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-badge::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    .hero-badge span {
+      color: var(--primary-light);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    .hero-badge i {
+      color: var(--primary);
+      font-size: 11px;
+    }
+
+    .hero-title {
+      font-size: 33px;
+      font-weight: 800;
+      line-height: 1.18;
+      margin-bottom: 15px;
+      letter-spacing: -0.5px;
+    }
+
+    .hero-title span {
+      background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 60%, #6C35D4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-description {
+      font-size: 14.5px;
+      color: var(--text-dim);
+      line-height: 1.6;
+      margin-bottom: 26px;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 28px;
+      margin-bottom: 26px;
+      flex-wrap: wrap;
+    }
+
+    .hero-stat-item {
+      text-align: left;
+    }
+
+    .hero-stat-value {
+      font-size: 24px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 3px;
+    }
+
+    .hero-stat-label {
+      font-size: 11.5px;
+      color: var(--text-dim);
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 10px;
+      flex-direction: column;
+    }
+
+    .btn-primary, .btn-secondary {
+      padding: 14px 20px;
+      border-radius: 14px;
+      font-size: 14.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      width: 100%;
+      letter-spacing: 0.2px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      border: none;
+      box-shadow: 0 4px 20px rgba(139, 63, 232, 0.35), 0 1px 0 rgba(255,255,255,0.1) inset;
+    }
+
+    .btn-primary:active {
+      transform: scale(0.97);
+      opacity: 0.92;
+      box-shadow: 0 2px 10px rgba(139, 63, 232, 0.25);
+    }
+
+    .btn-secondary {
+      background: rgba(183, 110, 255, 0.05);
+      border: 1px solid rgba(183, 110, 255, 0.15);
+      color: var(--text-light);
+    }
+
+    .btn-secondary:active {
+      border-color: var(--primary);
+      background: rgba(183, 110, 255, 0.1);
+      transform: scale(0.97);
+    }
+
+    .hero-image {
+      position: relative;
+      margin-top: 6px;
+    }
+
+    .hero-image::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 25px;
+      background: linear-gradient(135deg, rgba(183,110,255,0.3), rgba(139,63,232,0.15), transparent 60%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .hero-image img {
+      width: 100%;
+      height: auto;
+      border-radius: 24px;
+      display: block;
+      filter: brightness(0.88) saturate(1.1);
+    }
+
+    /* ===== STATS GRID ===== */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 44px;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 18px 14px;
+      text-align: center;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(183, 110, 255, 0.4), transparent);
+    }
+
+    .stat-card:active {
+      transform: scale(0.98);
+      border-color: rgba(183, 110, 255, 0.2);
+    }
+
+    .stat-icon {
+      width: 46px;
+      height: 46px;
+      background: linear-gradient(135deg, rgba(183, 110, 255, 0.15), rgba(139, 63, 232, 0.08));
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: var(--primary);
+      margin: 0 auto 13px;
+      border: 1px solid rgba(183, 110, 255, 0.12);
+    }
+
+    .stat-value {
+      font-size: 21px;
+      font-weight: 800;
+      margin-bottom: 4px;
+      color: var(--text-light);
+      letter-spacing: -0.3px;
+    }
+
+    .stat-label {
+      font-size: 11.5px;
+      color: var(--text-dim);
+      font-weight: 500;
+    }
+
+    /* ===== SECTION HEADER ===== */
+    .section-header {
+      text-align: left;
+      margin-bottom: 22px;
+    }
+
+    .section-subtitle {
+      color: var(--primary);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      letter-spacing: -0.3px;
+    }
+
+    .section-title span {
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .section-description {
+      font-size: 13px;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    /* ===== FEATURES ===== */
+    .features-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 44px;
+    }
+
+    .feature-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 22px;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), var(--primary-dark), transparent);
+    }
+
+    .feature-card::after {
+      content: '';
+      position: absolute;
+      bottom: -40px; right: -40px;
+      width: 120px; height: 120px;
+      background: radial-gradient(circle, rgba(183, 110, 255, 0.06), transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .feature-card:active {
+      transform: scale(0.99);
+      border-color: rgba(183, 110, 255, 0.2);
+    }
+
+    .feature-icon {
+      width: 54px;
+      height: 54px;
+      background: linear-gradient(135deg, rgba(183, 110, 255, 0.15), rgba(139, 63, 232, 0.08));
+      border-radius: 18px;
+      border: 1px solid rgba(183, 110, 255, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: var(--primary);
+      margin-bottom: 16px;
+    }
+
+    .feature-title {
+      font-size: 16.5px;
+      font-weight: 700;
+      margin-bottom: 7px;
+      letter-spacing: -0.2px;
+    }
+
+    .feature-description {
+      color: var(--text-dim);
+      font-size: 13px;
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+
+    .feature-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .feature-link i {
+      font-size: 11px;
+      transition: transform 0.2s ease;
+    }
+
+    .feature-card:active .feature-link i {
+      transform: translateX(3px);
+    }
+
+    .feature-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: linear-gradient(135deg, rgba(183, 110, 255, 0.2), rgba(139, 63, 232, 0.15));
+      color: var(--primary-light);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 11px;
+      border-radius: 20px;
+      border: 1px solid rgba(183, 110, 255, 0.2);
+    }
+
+    /* ===== FORMATIONS ===== */
+    .formations-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 44px;
+    }
+
+    .formation-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--card-border);
+      border-radius: 22px;
+      overflow: hidden;
+      transition: var(--transition);
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      position: relative;
+    }
+
+    .formation-card:active {
+      transform: scale(0.99);
+      border-color: rgba(183, 110, 255, 0.25);
+    }
+
+    .formation-image-wrap {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .formation-image {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+      filter: brightness(0.85) saturate(1.15);
+    }
+
+    .formation-card:active .formation-image {
+      transform: scale(1.02);
+    }
+
+    /* Overlay gradient on image */
+    .formation-image-wrap::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 60px;
+      background: linear-gradient(to top, var(--card-bg), transparent);
+      pointer-events: none;
+    }
+
+    .formation-content {
+      padding: 16px 18px 18px;
+    }
+
+    .formation-category {
+      display: inline-block;
+      background: linear-gradient(90deg, rgba(183, 110, 255, 0.15), rgba(139, 63, 232, 0.1));
+      border: 1px solid rgba(183, 110, 255, 0.2);
+      color: var(--primary-light);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 11px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .formation-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 7px;
+      line-height: 1.35;
+      letter-spacing: -0.1px;
+    }
+
+    .formation-description {
+      color: var(--text-dim);
+      font-size: 12.5px;
+      line-height: 1.45;
+      margin-bottom: 12px;
+    }
+
+    .formation-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 13px;
+      font-size: 11.5px;
+      color: var(--text-dim);
+    }
+
+    .formation-meta i {
+      color: var(--primary);
+      margin-right: 4px;
+    }
+
+    .formation-price {
+      font-size: 18px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 13px;
+    }
+
+    .formation-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, rgba(183, 110, 255, 0.12), rgba(139, 63, 232, 0.08));
+      color: var(--primary-light);
+      border: 1px solid rgba(183, 110, 255, 0.22);
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      letter-spacing: 0.2px;
+    }
+
+    .formation-btn:active {
+      transform: scale(0.98);
+      background: rgba(183, 110, 255, 0.2);
+    }
+
+    /* ===== TÉMOIGNAGES ===== */
+    .testimonials-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 44px;
+    }
+
+    .testimonial-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .testimonial-card::before {
+      content: '"';
+      position: absolute;
+      top: 10px; right: 16px;
+      font-size: 64px;
+      font-weight: 800;
+      color: rgba(183, 110, 255, 0.07);
+      line-height: 1;
+      font-family: Georgia, serif;
+    }
+
+    .testimonial-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .testimonial-avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(139, 63, 232, 0.3);
+    }
+
+    .testimonial-info h4 {
+      font-size: 14.5px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .testimonial-info p {
+      color: var(--text-dim);
+      font-size: 11px;
+    }
+
+    .testimonial-rating {
+      color: var(--warning);
+      margin-bottom: 10px;
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+
+    .testimonial-text {
+      color: var(--text-dim);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    /* ===== CTA ===== */
+    .cta-section {
+      background: linear-gradient(135deg, rgba(183, 110, 255, 0.1), rgba(139, 63, 232, 0.07));
+      border: 1px solid rgba(183, 110, 255, 0.15);
+      border-radius: 24px;
+      padding: 32px 22px;
+      text-align: center;
+      margin-bottom: 44px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: radial-gradient(circle at 50% 50%, rgba(183, 110, 255, 0.05), transparent 60%);
+      pointer-events: none;
+    }
+
+    .cta-title {
+      font-size: 23px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      letter-spacing: -0.3px;
+      position: relative;
+    }
+
+    .cta-description {
+      font-size: 13.5px;
+      color: var(--text-dim);
+      margin-bottom: 22px;
+      line-height: 1.5;
+      position: relative;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 10px;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      border-top: 1px solid rgba(183, 110, 255, 0.06);
+      padding: 40px 0 24px;
+    }
+
+    .footer-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      margin-bottom: 30px;
+    }
+
+    .footer-about {
+      text-align: center;
+    }
+
+    .footer-logo {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-style: italic;
+    }
+
+    .footer-text {
+      color: var(--text-dim);
+      font-size: 12.5px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .social-link {
+      width: 40px;
+      height: 40px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: var(--transition);
+      font-size: 15px;
+    }
+
+    .social-link:active {
+      background: rgba(183, 110, 255, 0.12);
+      color: var(--primary);
+      border-color: rgba(183, 110, 255, 0.3);
+      transform: scale(0.95);
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 20px;
+      border-top: 1px solid rgba(183, 110, 255, 0.04);
+      color: var(--text-dim);
+      font-size: 11px;
+    }
+
+    /* ===== NOTIFICATION ===== */
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      left: 16px;
+      right: 16px;
+      background: rgba(8, 8, 20, 0.97);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(183, 110, 255, 0.3);
+      border-radius: 18px;
+      padding: 13px 16px;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      z-index: 1000;
+      transform: translateY(120px);
+      transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 20px rgba(183, 110, 255, 0.1);
+    }
+
+    .notification.show {
+      transform: translateY(0);
+    }
+
+    .notification-icon {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, rgba(183, 110, 255, 0.2), rgba(139, 63, 232, 0.12));
+      border-radius: 14px;
+      border: 1px solid rgba(183, 110, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .notification-content h4 {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .notification-content p {
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    /* ===== DIVIDER ===== */
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(183, 110, 255, 0.12), transparent);
+      margin-bottom: 44px;
+    }
+  </style>
+</head>
+<body>
+
+  <script>
+    // ============================================
+    // PROTECTION - NEXUS LOCALSTORAGE
+    // ============================================
+    (function() {
+      const userId = localStorage.getItem('vexis_current_user');
+      if (!userId) {
+        window.location.href = 'login.html';
+        return;
+      }
+      const userData = localStorage.getItem(`vexis_user_${userId}`);
+      if (!userData) {
+        localStorage.removeItem('vexis_current_user');
+        window.location.href = 'login.html';
+        return;
+      }
+    })();
+  </script>
+
+  <div class="gradient-bg"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <div class="notification" id="notification">
+    <div class="notification-icon">
+      <i class="fas fa-gem"></i>
+    </div>
+    <div class="notification-content">
+      <h4>Bienvenue sur Nexus</h4>
+      <p>Investissez et apprenez</p>
+    </div>
+  </div>
+
+  <header class="header">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">N</div>
+      <div class="logo-text">NEXUS</div>
+    </a>
+
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <a href="profil.html" class="user-profile" id="userProfile">
+        <div class="user-avatar" id="userAvatar">U</div>
+        <span class="user-name" id="userName">Utilisateur</span>
+      </a>
+      <div class="menu-btn" onclick="window.location.href='menu.html'">
+        <i class="fas fa-bars"></i>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    
+    <section class="hero-section">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <i class="fas fa-gem"></i>
+          <span>Plateforme d'investissement</span>
+        </div>
+        
+        <h1 class="hero-title">
+          Investissez et <span>prospérez</span><br>avec Nexus
+        </h1>
+        
+        <p class="hero-description">
+          La plateforme qui allie investissement rentable et formations d'excellence.
+        </p>
+        
+        <div class="hero-stats">
+          <div class="hero-stat-item">
+            <div class="hero-stat-value">+40%</div>
+            <div class="hero-stat-label">Rendement</div>
+          </div>
+          <div class="hero-stat-item">
+            <div class="hero-stat-value">500+</div>
+            <div class="hero-stat-label">Membres</div>
+          </div>
+          <div class="hero-stat-item">
+            <div class="hero-stat-value">15+</div>
+            <div class="hero-stat-label">Formations</div>
+          </div>
+        </div>
+        
+        <div class="hero-buttons">
+          <a href="investissement.html" class="btn-primary">
+            <i class="fas fa-chart-line"></i>
+            Investir maintenant
+          </a>
+          <a href="formations.html" class="btn-secondary">
+            <i class="fas fa-graduation-cap"></i>
+            Voir les formations
+          </a>
+          <a href="depot.html" class="btn-secondary">
+            <i class="fas fa-wallet"></i>
+            Déposer des fonds
+          </a>
+        </div>
+      </div>
+      
+      <div class="hero-image">
+        <img src="https://images.pexels.com/photos/3769632/pexels-photo-3769632.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Nexus Hero" loading="lazy">
+      </div>
+    </section>
+
+    <section class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-coins"></i>
+        </div>
+        <div class="stat-value" id="statBalance">0 FCFA</div>
+        <div class="stat-label">Solde</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-chart-simple"></i>
+        </div>
+        <div class="stat-value" id="statInvestments">0</div>
+        <div class="stat-label">Investissements</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-book-open"></i>
+        </div>
+        <div class="stat-value" id="statCourses">0</div>
+        <div class="stat-label">Formations</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-calendar-check"></i>
+        </div>
+        <div class="stat-value" id="statDays">0</div>
+        <div class="stat-label">Jours actifs</div>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <section class="features-section">
+      <div class="section-header">
+        <div class="section-subtitle">Nos services</div>
+        <h2 class="section-title">
+          Tout pour <span>réussir</span>
+        </h2>
+        <p class="section-description">
+          Des outils puissants pour générer des revenus.
+        </p>
+      </div>
+      
+      <div class="features-grid">
+        <a href="investissement.html" class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-oil-well"></i>
+          </div>
+          <h3 class="feature-title">Investissement Pétrole</h3>
+          <p class="feature-description">
+            Gains quotidiens avec +40% de rendement garanti.
+          </p>
+          <span class="feature-link">
+            Investir <i class="fas fa-arrow-right"></i>
+          </span>
+          <div class="feature-badge">+40%</div>
+        </a>
+        
+        <a href="calendrier.html" class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-tasks"></i>
+          </div>
+          <h3 class="feature-title">Activités quotidiennes</h3>
+          <p class="feature-description">
+            Gagnez jusqu'à 400 FCFA par jour avec des tâches simples.
+          </p>
+          <span class="feature-link">
+            Découvrir <i class="fas fa-arrow-right"></i>
+          </span>
+          <div class="feature-badge">+400F/jour</div>
+        </a>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <section class="formations-section">
+      <div class="section-header">
+        <div class="section-subtitle">Formations</div>
+        <h2 class="section-title">
+          Apprenez et <span>gagnez</span>
+        </h2>
+        <p class="section-description">
+          Des formations conçues par des experts du terrain.
+        </p>
+      </div>
+      
+      <div class="formations-grid">
+        <!-- Formation 1: Business -->
+        <a href="formations.html" class="formation-card">
+          <div class="formation-image-wrap">
+            <img src="https://images.pexels.com/photos/5717546/pexels-photo-5717546.jpeg?auto=compress&cs=tinysrgb&w=700" alt="Business en ligne" class="formation-image" loading="lazy">
+          </div>
+          <div class="formation-content">
+            <span class="formation-category">Business</span>
+            <h3 class="formation-title">Lancer son business avec zéro franc en 7 jours</h3>
+            <p class="formation-description">
+              Démarrez sans capital et générez vos premiers revenus rapidement.
+            </p>
+            <div class="formation-meta">
+              <span><i class="far fa-clock"></i> 3h00</span>
+              <span><i class="fas fa-signal"></i> 4.9 (156)</span>
+            </div>
+            <div class="formation-price">Gratuit</div>
+            <span class="formation-btn">
+              <i class="fas fa-play"></i> Commencer la formation
+            </span>
+          </div>
+        </a>
+        
+        <!-- Formation 2: Marketing mobile -->
+        <a href="formation1.html" class="formation-card">
+          <div class="formation-image-wrap">
+            <img src="https://images.pexels.com/photos/6963944/pexels-photo-6963944.jpeg?auto=compress&cs=tinysrgb&w=700" alt="Cash avec téléphone" class="formation-image" loading="lazy">
+          </div>
+          <div class="formation-content">
+            <span class="formation-category">Marketing</span>
+            <h3 class="formation-title">Gagner ton premier cash avec ton téléphone</h3>
+            <p class="formation-description">
+              Utilisez votre smartphone pour générer des revenus en ligne.
+            </p>
+            <div class="formation-meta">
+              <span><i class="far fa-clock"></i> 2h30</span>
+              <span><i class="fas fa-signal"></i> 4.8 (203)</span>
+            </div>
+            <div class="formation-price">Gratuit</div>
+            <span class="formation-btn">
+              <i class="fas fa-play"></i> Commencer la formation
+            </span>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <section class="testimonials-section">
+      <div class="section-header">
+        <div class="section-subtitle">Témoignages</div>
+        <h2 class="section-title">
+          Ils nous <span>font confiance</span>
+        </h2>
+      </div>
+      
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <div class="testimonial-header">
+            <div class="testimonial-avatar">JD</div>
+            <div class="testimonial-info">
+              <h4>Jean D.</h4>
+              <p>Membre depuis janvier 2026</p>
+            </div>
+          </div>
+          <div class="testimonial-rating">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          </div>
+          <p class="testimonial-text">
+            "Grâce à Nexus, j'ai transformé mon téléphone en source de revenus. Les formations sont claires et efficaces !"
+          </p>
+        </div>
+        
+        <div class="testimonial-card">
+          <div class="testimonial-header">
+            <div class="testimonial-avatar">SM</div>
+            <div class="testimonial-info">
+              <h4>Sarah M.</h4>
+              <p>Membre depuis novembre 2025</p>
+            </div>
+          </div>
+          <div class="testimonial-rating">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          </div>
+          <p class="testimonial-text">
+            "Investissement rentable et suivi impeccable. Je recommande Nexus à tous ceux qui veulent se lancer sérieusement."
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-section">
+      <h2 class="cta-title">Prêt à démarrer ?</h2>
+      <p class="cta-description">
+        Rejoignez une communauté qui réussit avec Nexus.
+      </p>
+      <div class="cta-buttons">
+        <a href="investissement.html" class="btn-primary">
+          <i class="fas fa-chart-line"></i>
+          Investir maintenant
+        </a>
+        <a href="formations.html" class="btn-secondary">
+          <i class="fas fa-graduation-cap"></i>
+          Explorer les formations
+        </a>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-grid">
+        <div class="footer-about">
+          <div class="footer-logo">Nexus</div>
+          <p class="footer-text">
+            La plateforme complète pour investir, gagner et apprendre.
+          </p>
+          <div class="social-links">
+            <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-whatsapp"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-telegram"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p>&copy; 2026 Nexus. Tous droits réservés.</p>
+      </div>
+    </footer>
+
+  </main>
+
+  <script>
+    // ============================================
+    // VARIABLES UTILISATEUR - NEXUS LOCALSTORAGE
+    // ============================================
+    let userData = {
+      balance: 0,
+      investments: [],
+      courses: [],
+      registrationDate: new Date().toISOString(),
+      name: "Utilisateur"
+    };
+
+    // ============================================
+    // INITIALISATION
+    // ============================================
+    function init() {
+      loadUserData();
+      updateUI();
+      showWelcomeNotification();
+    }
+
+    // ============================================
+    // CHARGER LES DONNEES
+    // ============================================
+    function loadUserData() {
+      const userId = localStorage.getItem('vexis_current_user');
+      if (userId) {
+        const savedData = localStorage.getItem('vexis_user_' + userId);
+        if (savedData) {
+          userData = JSON.parse(savedData);
+        }
+      }
+      
+      const name = userData.name || 'Utilisateur';
+      document.getElementById('userName').textContent = name;
+      document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
+    }
+
+    // ============================================
+    // METTRE A JOUR L'INTERFACE
+    // ============================================
+    function updateUI() {
+      document.getElementById('statBalance').textContent = (userData.balance || 0).toLocaleString('fr-FR') + ' FCFA';
+      
+      const activeInvestments = (userData.investments || []).filter(function(inv) { return inv.status === 'active'; }).length;
+      document.getElementById('statInvestments').textContent = activeInvestments;
+      
+      document.getElementById('statCourses').textContent = (userData.courses ? userData.courses.length : 0);
+      
+      if (userData.registrationDate) {
+        const days = Math.floor((new Date() - new Date(userData.registrationDate)) / (1000 * 60 * 60 * 24));
+        document.getElementById('statDays').textContent = days;
+      }
+    }
+
+    // ============================================
+    // NOTIFICATION DE BIENVENUE
+    // ============================================
+    function showWelcomeNotification() {
+      setTimeout(function() {
+        document.getElementById('notification').classList.add('show');
+        setTimeout(function() {
+          document.getElementById('notification').classList.remove('show');
+        }, 4000);
+      }, 1000);
+    }
+
+    // ============================================
+    // SYNCHRONISATION
+    // ============================================
+    setInterval(function() {
+      const userId = localStorage.getItem('vexis_current_user');
+      if (userId) {
+        const savedData = localStorage.getItem('vexis_user_' + userId);
+        if (savedData) {
+          const freshData = JSON.parse(savedData);
+          if (JSON.stringify(userData) !== JSON.stringify(freshData)) {
+            userData = freshData;
+            updateUI();
+          }
+        }
+      }
+    }, 3000);
+
+    // ============================================
+    // DEMARRER
+    // ============================================
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+
+</body>
+</html>
