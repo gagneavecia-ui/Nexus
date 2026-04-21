@@ -8,9 +8,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" type="image/png" href="icon.png">
-  
+  <!-- PWA Meta Tags -->
+<link rel="manifest" href="nexus-manifest.json">
+<link rel="apple-touch-icon" href="icons.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Nexus">
+<meta name="theme-color" content="#B76EFF">
+<meta name="mobile-web-app-capable" content="yes">
   <style>
     /* ===== VARIABLES - NEXUS EDITION ===== */
     :root {
@@ -1444,6 +1449,68 @@
     // DEMARRER
     // ============================================
     document.addEventListener('DOMContentLoaded', init);
+    
+// Enregistrement du Service Worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then(reg => console.log('Service Worker OK:', reg.scope))
+      .catch(err => console.log('Erreur SW:', err));
+  });
+}
+
+// Bouton d'installation
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  
+  // Créer le bouton flottant
+  const installDiv = document.createElement('div');
+  installDiv.id = 'nexus-install-banner';
+  installDiv.innerHTML = `
+    <div style="
+      position: fixed;
+      bottom: 20px;
+      left: 16px;
+      right: 16px;
+      background: linear-gradient(135deg, #B76EFF, #8B3FE8);
+      border-radius: 18px;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 9999;
+      box-shadow: 0 5px 25px rgba(139,63,232,0.3);
+      cursor: pointer;
+      max-width: 500px;
+      margin: 0 auto;
+    ">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <i class="fas fa-download" style="font-size: 20px;"></i>
+        <div>
+          <strong style="font-size: 14px;">Installer Nexus</strong>
+          <p style="font-size: 11px; opacity: 0.8; margin: 0;">Ajouter à l'écran d'accueil</p>
+        </div>
+      </div>
+      <i class="fas fa-times" style="font-size: 16px;" id="close-install"></i>
+    </div>
+  `;
+  document.body.appendChild(installDiv);
+  
+  document.getElementById('close-install')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    installDiv.remove();
+  });
+  
+  installDiv.addEventListener('click', async () => {
+    if (!deferredPrompt) return;
+    installDiv.remove();
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+  });
+});
   </script>
 
 </body>
