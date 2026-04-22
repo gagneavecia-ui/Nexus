@@ -1444,12 +1444,6 @@
     // DEMARRER
     // ============================================
     document.addEventListener('DOMContentLoaded', init);
-    
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/Nexus/sw.js')
-    .then(() => console.log('Service Worker OK'))
-    .catch(err => console.log('Erreur SW:', err));
-}
   </script>
 
 </body>
