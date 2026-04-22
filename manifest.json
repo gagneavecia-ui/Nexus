@@ -1,16 +1,19 @@
 {
-  "name": "Nexus",
+  "name": "Nexus Invest & Learn",
   "short_name": "Nexus",
-  "start_url": "./index.html",
-  "scope": "./",
+  "description": "Investissez et apprenez avec Nexus",
+  "start_url": "/index.html",
   "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#000000",
+  "theme_color": "#B76EFF",
+  "background_color": "#030305",
+  "orientation": "portrait",
+  "scope": "/",
   "icons": [
     {
       "src": "icon.png",
-      "sizes": "500x500",
-      "type": "image/png"
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
